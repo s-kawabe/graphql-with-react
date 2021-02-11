@@ -1,4 +1,0 @@
-- GraphQL
-- Apollo
-- React
-- TypeScript
