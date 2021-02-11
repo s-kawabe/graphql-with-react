@@ -1,4 +1,9 @@
+import { Box } from '@chakra-ui/react'
 import Head from 'next/head'
+
+// const GITHUB_TOKEN = process.env.NEXT_PUBLIC_GITHUB_TOKEN
+// // eslint-disable-next-line no-console
+// console.log({ GITHUB_TOKEN })
 
 const Home = () => {
   return (
@@ -7,14 +12,29 @@ const Home = () => {
         <title>Home</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <h2>Home</h2>
-      <button
-        onClick={() => {
-          window.alert('Hello, World!')
-        }}
-      >
-        Button
-      </button>
+      <Box w="70vw" display="flex" justifyContent="center" flexDirection="column" mx="auto">
+        <Box
+          bg="teal.100"
+          w="100%"
+          p={4}
+          my="10"
+          color="#606060"
+          fontWeight="bold"
+          textAlign="center"
+          fontSize="1.5rem"
+          borderRadius="30px"
+          boxShadow="2px 2px 5px 0px rgba(0,0,0,0.25)"
+        >
+          GitHub Repository Search
+        </Box>
+        <button
+          onClick={() => {
+            window.alert('Hello, World!')
+          }}
+        >
+          Button
+        </button>
+      </Box>
     </>
   )
 }
