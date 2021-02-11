@@ -31,8 +31,11 @@
     ]
   },
   "dependencies": {
+    "apollo-boost": "0.1.16",
+    "graphql": "14.0.2",
     "next": "10.0.6",
     "react": "17.0.1",
+    "react-apollo": "2.1.11",
     "react-dom": "17.0.1"
   },
   "devDependencies": {

@@ -20,6 +20,7 @@ GithubのSettings → DevelopperSettings → Personal access tokens
 # Next.jsテンプレートをclone
 https://github.com/s-kawabe/nextjs-my-template
 ここからテンプレートをclone
+yarnをしてyarn devをして動いてるか一応確認する。
 
-# 
+
 
