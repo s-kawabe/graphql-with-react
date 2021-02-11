@@ -1,7 +1,3 @@
-# Next.js starter template.
+# Practice Directory
 
-- Next.js
-- TypeScript
-- ESLint
-- Prettier
-
+GraphQL & Next.js APP
