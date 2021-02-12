@@ -10,25 +10,22 @@ type Variables = {
   before: string | null
   first: number | null
   last: number | null
-  query: string
 }
 
-const VARIABLES: Variables = {
+const DEFAULT_STATE: Variables = {
   after: null,
   before: null,
   first: 5,
   last: null,
-  query: 'フロントエンドエンジニア',
 }
 
 const Home = () => {
   const [queryResult, setQueryResult] = useState('')
-  // const [query, setQuery] = useState('')
-  // const [variables, setVariables] = useState<Variables>(VARIABLES)
-  const { query, first, last, before, after } = VARIABLES
+  const [searchWord, setSearchWord] = useState('')
+  const { first, last, before, after } = DEFAULT_STATE
 
   const qlQuery = useQuery(SEARCH_REPOSITORIES, {
-    variables: { query, first, last, before, after },
+    variables: { query: searchWord, first, last, before, after },
   })
 
   const handleClick = ({ loading, error, data }: any) => {
@@ -40,9 +37,9 @@ const Home = () => {
     return ''
   }
 
-  // const inputId = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setId(e.target.value)
-  // }
+  const inputSearchWord = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchWord(e.target.value)
+  }
 
   return (
     <>
@@ -71,9 +68,9 @@ const Home = () => {
           mx="auto"
           w="30vw"
           mb="10"
-          // onChange={(e) => {
-          //   inputId(e)
-          // }}
+          onChange={(e) => {
+            inputSearchWord(e)
+          }}
         />
         <Button
           colorScheme="blue"
