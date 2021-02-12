@@ -1,18 +1,49 @@
+import { useQuery } from '@apollo/client'
 import { Box, Button, Input } from '@chakra-ui/react'
-import gql from 'graphql-tag'
 import Head from 'next/head'
-import { Query } from 'react-apollo'
+import { useState } from 'react'
 
-const USER = gql`
-  query USER {
-    user(login: "s-kawabe") {
-      name
-      bio
-    }
-  }
-`
+import { SEARCH_REPOSITORIES } from '@/graphql/query'
+
+type Variables = {
+  after: string | null
+  before: string | null
+  first: number | null
+  last: number | null
+  query: string
+}
+
+const VARIABLES: Variables = {
+  after: null,
+  before: null,
+  first: 5,
+  last: null,
+  query: 'フロントエンドエンジニア',
+}
 
 const Home = () => {
+  const [queryResult, setQueryResult] = useState('')
+  // const [query, setQuery] = useState('')
+  // const [variables, setVariables] = useState<Variables>(VARIABLES)
+  const { query, first, last, before, after } = VARIABLES
+
+  const qlQuery = useQuery(SEARCH_REPOSITORIES, {
+    variables: { query, first, last, before, after },
+  })
+
+  const handleClick = ({ loading, error, data }: any) => {
+    if (loading) return 'loading...'
+    if (error) return `Error!! ${error.message}`
+
+    // eslint-disable-next-line no-console
+    console.log(data)
+    return ''
+  }
+
+  // const inputId = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setId(e.target.value)
+  // }
+
   return (
     <>
       <Head>
@@ -34,28 +65,28 @@ const Home = () => {
         >
           GitHub Repository Search
         </Box>
-        <Input placeholder="insert your github id!" size="lg" mx="auto" w="30vw" mb="10" />
+        <Input
+          placeholder="insert concern repository name!"
+          size="lg"
+          mx="auto"
+          w="30vw"
+          mb="10"
+          // onChange={(e) => {
+          //   inputId(e)
+          // }}
+        />
         <Button
           colorScheme="blue"
           mx="auto"
           mb="20"
           w="30vw"
           onClick={() => {
-            window.alert('hello graphql')
+            setQueryResult(handleClick(qlQuery))
           }}
         >
           Search!
         </Button>
-        {
-          <Query query={USER}>
-            {({ loading, error, data }: any) => {
-              if (loading) return 'loading...'
-              if (error) return `Error!! ${error.message}`
-
-              return <div>{data.user.bio}</div>
-            }}
-          </Query>
-        }
+        <div>{queryResult}</div>
       </Box>
     </>
   )

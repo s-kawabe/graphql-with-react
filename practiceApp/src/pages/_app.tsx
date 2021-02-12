@@ -1,10 +1,10 @@
+import { ApolloProvider } from '@apollo/react-hooks'
 import { ChakraProvider } from '@chakra-ui/react'
 import { css, Global } from '@emotion/react'
 import emotionReset from 'emotion-reset'
 import type { AppProps } from 'next/app'
-import { ApolloProvider } from 'react-apollo'
 
-import { client } from '../graphql/client'
+import { client } from '@/graphql/client'
 
 const global = css`
   html,

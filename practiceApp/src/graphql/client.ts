@@ -1,5 +1,4 @@
-import { InMemoryCache } from 'apollo-cache-inmemory'
-import { ApolloClient } from 'apollo-client'
+import { ApolloClient, InMemoryCache } from 'apollo-boost'
 import { ApolloLink } from 'apollo-link'
 import { HttpLink } from 'apollo-link-http'
 
