@@ -1,10 +1,6 @@
 import { Box } from '@chakra-ui/react'
 import Head from 'next/head'
 
-// const GITHUB_TOKEN = process.env.NEXT_PUBLIC_GITHUB_TOKEN
-// // eslint-disable-next-line no-console
-// console.log({ GITHUB_TOKEN })
-
 const Home = () => {
   return (
     <>

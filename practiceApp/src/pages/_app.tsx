@@ -2,6 +2,9 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { css, Global } from '@emotion/react'
 import emotionReset from 'emotion-reset'
 import type { AppProps } from 'next/app'
+import { ApolloProvider } from 'react-apollo'
+
+import { client } from '../graphql/client'
 
 const global = css`
   html,
@@ -17,15 +20,17 @@ const global = css`
 // eslint-disable-next-line react/destructuring-assignment
 const App = ({ Component, pageProps }: AppProps) => {
   return (
-    <ChakraProvider>
-      <Global
-        styles={css`
-          ${emotionReset}
-          ${global}
-        `}
-      />
-      <Component {...pageProps} />
-    </ChakraProvider>
+    <ApolloProvider client={client}>
+      <ChakraProvider>
+        <Global
+          styles={css`
+            ${emotionReset}
+            ${global}
+          `}
+        />
+        <Component {...pageProps} />
+      </ChakraProvider>
+    </ApolloProvider>
   )
 }
 
