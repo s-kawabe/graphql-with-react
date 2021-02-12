@@ -3,6 +3,7 @@ import { Alert, AlertIcon, Box, Button, Input } from '@chakra-ui/react'
 import Head from 'next/head'
 import { useState } from 'react'
 
+import { RepositoryTable } from '@/components'
 import { SEARCH_REPOSITORIES } from '@/graphql/query'
 
 type Variables = {
@@ -12,6 +13,17 @@ type Variables = {
   last: number | null
 }
 
+export type Edges = {
+  cursor: string
+  node: {
+    id: string
+    name: string
+    url: string
+    __typename: string
+  }
+  __typename: string
+}[]
+
 const DEFAULT_STATE: Variables = {
   after: null,
   before: null,
@@ -20,7 +32,8 @@ const DEFAULT_STATE: Variables = {
 }
 
 const Home = () => {
-  const [queryResult, setQueryResult] = useState<string>('')
+  const [title, setTitle] = useState<string>('')
+  const [edges, setEdes] = useState<Edges>([])
   const [searchWord, setSearchWord] = useState('')
   const { first, last, before, after } = DEFAULT_STATE
 
@@ -34,6 +47,8 @@ const Home = () => {
 
     // eslint-disable-next-line no-console
     console.log(data.search)
+
+    setEdes(data.search.edges)
     return data.search.repositoryCount
   }
 
@@ -78,18 +93,21 @@ const Home = () => {
           mb="20"
           w="30vw"
           onClick={() => {
-            setQueryResult(handleClick(qlQuery))
+            setTitle(handleClick(qlQuery))
           }}
         >
           Search!
         </Button>
-        {queryResult === '' || isNaN(Number(queryResult)) ? (
+        {title === '' || isNaN(Number(title)) ? (
           <div>Please Insert word</div>
         ) : (
-          <Alert status="success" fontWeight="bold">
-            <AlertIcon />
-            {`GitHub Repositories Search Result: ${queryResult} Repositories!`}
-          </Alert>
+          <>
+            <Alert status="success" fontWeight="bold">
+              <AlertIcon />
+              {`GitHub Repositories Search Result: ${title} Repositories!`}
+            </Alert>
+            <RepositoryTable edges={edges} />
+          </>
         )}
       </Box>
     </>
