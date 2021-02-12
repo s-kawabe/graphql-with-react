@@ -1,5 +1,16 @@
-import { Box } from '@chakra-ui/react'
+import { Box, Button, Input } from '@chakra-ui/react'
+import gql from 'graphql-tag'
 import Head from 'next/head'
+import { Query } from 'react-apollo'
+
+const USER = gql`
+  query USER {
+    user(login: "s-kawabe") {
+      name
+      bio
+    }
+  }
+`
 
 const Home = () => {
   return (
@@ -23,13 +34,28 @@ const Home = () => {
         >
           GitHub Repository Search
         </Box>
-        <button
+        <Input placeholder="insert your github id!" size="lg" mx="auto" w="30vw" mb="10" />
+        <Button
+          colorScheme="blue"
+          mx="auto"
+          mb="20"
+          w="30vw"
           onClick={() => {
-            window.alert('Hello, World!')
+            window.alert('hello graphql')
           }}
         >
-          Button
-        </button>
+          Search!
+        </Button>
+        {
+          <Query query={USER}>
+            {({ loading, error, data }: any) => {
+              if (loading) return 'loading...'
+              if (error) return `Error!! ${error.message}`
+
+              return <div>{data.user.bio}</div>
+            }}
+          </Query>
+        }
       </Box>
     </>
   )
