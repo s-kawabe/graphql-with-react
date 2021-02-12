@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client'
-import { Box, Button, Input } from '@chakra-ui/react'
+import { Alert, AlertIcon, Box, Button, Input } from '@chakra-ui/react'
 import Head from 'next/head'
 import { useState } from 'react'
 
@@ -20,7 +20,7 @@ const DEFAULT_STATE: Variables = {
 }
 
 const Home = () => {
-  const [queryResult, setQueryResult] = useState('')
+  const [queryResult, setQueryResult] = useState<string>('')
   const [searchWord, setSearchWord] = useState('')
   const { first, last, before, after } = DEFAULT_STATE
 
@@ -28,13 +28,13 @@ const Home = () => {
     variables: { query: searchWord, first, last, before, after },
   })
 
-  const handleClick = ({ loading, error, data }: any) => {
+  const handleClick = ({ loading, error, data }: any): string => {
     if (loading) return 'loading...'
     if (error) return `Error!! ${error.message}`
 
     // eslint-disable-next-line no-console
-    console.log(data)
-    return ''
+    console.log(data.search)
+    return data.search.repositoryCount
   }
 
   const inputSearchWord = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,7 +83,14 @@ const Home = () => {
         >
           Search!
         </Button>
-        <div>{queryResult}</div>
+        {queryResult === '' || isNaN(Number(queryResult)) ? (
+          <div>Please Insert word</div>
+        ) : (
+          <Alert status="success" fontWeight="bold">
+            <AlertIcon />
+            {`GitHub Repositories Search Result: ${queryResult} Repositories!`}
+          </Alert>
+        )}
       </Box>
     </>
   )
