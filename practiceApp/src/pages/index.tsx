@@ -75,6 +75,15 @@ const Home = () => {
     setSearchWord(e.target.value)
   }
 
+  const goPrevious = () => {
+    setVariables({
+      last: 5,
+      before: pageInfo.startCursor,
+      first: null,
+      after: null,
+    })
+  }
+
   const goNext = () => {
     setVariables({
       first: 5,
@@ -121,17 +130,6 @@ const Home = () => {
             inputSearchWord(e)
           }}
         />
-        {/* <Button
-          colorScheme="blue"
-          mx="auto"
-          mb="10"
-          w="30vw"
-          onClick={() => {
-            queryHandler(qlQuery)
-          }}
-        >
-          Search!
-        </Button> */}
         <>
           <Alert status="success" fontWeight="bold">
             <AlertIcon />
@@ -141,10 +139,18 @@ const Home = () => {
           <RepositoryTable edges={edges} />
 
           <Flex mt={10} justifyContent="center">
-            {pageInfo?.hasPreviousPage && (
-              <Button leftIcon={<ArrowBackIcon />} colorScheme="teal">
+            {pageInfo?.hasPreviousPage ? (
+              <Button
+                leftIcon={<ArrowBackIcon />}
+                colorScheme="teal"
+                onClick={() => {
+                  goPrevious()
+                }}
+              >
                 Previous
               </Button>
+            ) : (
+              <Box w="80px"></Box>
             )}
             {pageInfo?.hasNextPage && (
               <Button
