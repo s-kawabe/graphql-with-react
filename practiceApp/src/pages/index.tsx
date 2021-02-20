@@ -1,7 +1,8 @@
 import { useQuery } from '@apollo/client'
-import { Alert, AlertIcon, Box, Button, Input } from '@chakra-ui/react'
+import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons'
+import { Alert, AlertIcon, Box, Button, Flex, Input } from '@chakra-ui/react'
 import Head from 'next/head'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { RepositoryTable } from '@/components'
 import { SEARCH_REPOSITORIES } from '@/graphql/query'
@@ -11,6 +12,14 @@ type Variables = {
   before: string | null
   first: number | null
   last: number | null
+}
+
+export type PageInfo = {
+  endCursor: string
+  startCursor: string
+  hasNextPage: boolean
+  hasPreviousPage: boolean
+  __pageInfo: string
 }
 
 export type Edges = {
@@ -31,30 +40,55 @@ const DEFAULT_STATE: Variables = {
   last: null,
 }
 
+const DEFAULT_PAGE_INFO: PageInfo = {
+  endCursor: '',
+  startCursor: '',
+  hasNextPage: false,
+  hasPreviousPage: false,
+  __pageInfo: '',
+}
+
 const Home = () => {
   const [title, setTitle] = useState<string>('')
   const [edges, setEdes] = useState<Edges>([])
+  const [pageInfo, setPageInfo] = useState<PageInfo>(DEFAULT_PAGE_INFO)
   const [searchWord, setSearchWord] = useState('')
-  const { first, last, before, after } = DEFAULT_STATE
+  const [variables, setVariables] = useState<Variables>(DEFAULT_STATE)
 
   const qlQuery = useQuery(SEARCH_REPOSITORIES, {
-    variables: { query: searchWord, first, last, before, after },
+    variables: { query: searchWord, ...variables },
   })
 
-  const handleClick = ({ loading, error, data }: any): string => {
-    if (loading) return 'loading...'
-    if (error) return `Error!! ${error.message}`
+  const queryHandler = ({ loading, error, data }: any): void => {
+    if (loading) return setTitle(title)
+    if (error) return setTitle(`Error!! ${error.message}`)
 
     // eslint-disable-next-line no-console
-    console.log(data.search)
+    // console.log(data.search)
 
+    setPageInfo(data.search.pageInfo)
     setEdes(data.search.edges)
-    return data.search.repositoryCount
+    setTitle(data.search.repositoryCount)
   }
 
   const inputSearchWord = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchWord(e.target.value)
   }
+
+  const goNext = () => {
+    setVariables({
+      first: 5,
+      after: pageInfo.endCursor,
+      last: null,
+      before: null,
+    })
+  }
+
+  // queryが変更されたら各ステートも変更してテーブルを再レンダリングする
+  useEffect(() => {
+    queryHandler(qlQuery)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [qlQuery])
 
   return (
     <>
@@ -87,28 +121,45 @@ const Home = () => {
             inputSearchWord(e)
           }}
         />
-        <Button
+        {/* <Button
           colorScheme="blue"
           mx="auto"
-          mb="20"
+          mb="10"
           w="30vw"
           onClick={() => {
-            setTitle(handleClick(qlQuery))
+            queryHandler(qlQuery)
           }}
         >
           Search!
-        </Button>
-        {title === '' || isNaN(Number(title)) ? (
-          <div>Please Insert word</div>
-        ) : (
-          <>
-            <Alert status="success" fontWeight="bold">
-              <AlertIcon />
-              {`GitHub Repositories Search Result: ${title} Repositories!`}
-            </Alert>
-            <RepositoryTable edges={edges} />
-          </>
-        )}
+        </Button> */}
+        <>
+          <Alert status="success" fontWeight="bold">
+            <AlertIcon />
+            {`GitHub Repositories Search Result: ${title} Repositories!`}
+          </Alert>
+
+          <RepositoryTable edges={edges} />
+
+          <Flex mt={10} justifyContent="center">
+            {pageInfo?.hasPreviousPage && (
+              <Button leftIcon={<ArrowBackIcon />} colorScheme="teal">
+                Previous
+              </Button>
+            )}
+            {pageInfo?.hasNextPage && (
+              <Button
+                rightIcon={<ArrowForwardIcon />}
+                colorScheme="teal"
+                ml={5}
+                onClick={() => {
+                  goNext()
+                }}
+              >
+                Next
+              </Button>
+            )}
+          </Flex>
+        </>
       </Box>
     </>
   )
