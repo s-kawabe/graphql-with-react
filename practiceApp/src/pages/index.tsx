@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 import { RepositoryTable } from '@/components'
 import { SEARCH_REPOSITORIES } from '@/graphql/query'
 
-type Variables = {
+export type Variables = {
   after: string | null
   before: string | null
   first: number | null
@@ -140,7 +140,7 @@ const Home = () => {
             {`GitHub Repositories Search Result: ${title} Repositories!`}
           </Alert>
 
-          <RepositoryTable edges={edges} />
+          <RepositoryTable edges={edges} variables={{ query: searchWord, ...variables }} />
 
           <Flex mt={10} justifyContent="center">
             {pageInfo?.hasPreviousPage ? (
