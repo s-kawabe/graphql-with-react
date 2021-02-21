@@ -31,6 +31,10 @@ export const SEARCH_REPOSITORIES = gql`
             id
             name
             url
+            stargazers {
+              totalCount
+            }
+            viewerHasStarred
           }
         }
       }

@@ -29,9 +29,13 @@ export type Edges = {
     name: string
     url: string
     __typename: string
+    stargazers: {
+      totalCount: string
+    }
+    viewerHasStarred: boolean
   }
   __typename: string
-}[]
+}
 
 const DEFAULT_STATE: Variables = {
   after: null,
@@ -50,7 +54,7 @@ const DEFAULT_PAGE_INFO: PageInfo = {
 
 const Home = () => {
   const [title, setTitle] = useState<string>('')
-  const [edges, setEdes] = useState<Edges>([])
+  const [edges, setEdes] = useState<Edges[]>([])
   const [pageInfo, setPageInfo] = useState<PageInfo>(DEFAULT_PAGE_INFO)
   const [searchWord, setSearchWord] = useState('')
   const [variables, setVariables] = useState<Variables>(DEFAULT_STATE)

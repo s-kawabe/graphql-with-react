@@ -1,6 +1,7 @@
 import { Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 
+import StarButton from '@/components/StarButton'
 import type { Edges } from '@/pages/index'
 
 const LinkColoring = styled.a`
@@ -12,20 +13,20 @@ const LinkColoring = styled.a`
 `
 
 type Props = {
-  edges: Edges
+  edges: Edges[]
 }
 
 // eslint-disable-next-line react/destructuring-assignment
 const RepositoryTable: React.FC<Props> = (props: Props) => {
   // eslint-disable-next-line no-console
-  // console.log(props)
+  console.log(props)
   return (
     <>
       <Table variant="striped" colorScheme="teal.100">
         <Thead>
           <Tr>
-            <Th w="70%">RepositoryName</Th>
-            <Th w="30%">star</Th>
+            <Th w="75%">RepositoryName</Th>
+            <Th w="25%">star</Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -38,7 +39,9 @@ const RepositoryTable: React.FC<Props> = (props: Props) => {
                     {edge.node.name}
                   </LinkColoring>
                 </Td>
-                <Td>hoge</Td>
+                <Td>
+                  <StarButton node={edge.node} />
+                </Td>
               </Tr>
             )
           })}
