@@ -42,11 +42,13 @@ export const SEARCH_REPOSITORIES = gql`
   }
 `
 
-// export const USER = gql`
-//   query USER($id: String!) {
-//     user(login: $id) {
-//       name
-//       bio
-//     }
-//   }
-// `
+export const ADD_STAR = gql`
+  mutation addStar($input: AddStarInput!) {
+    addStar(input: $input) {
+      starrable {
+        id
+        viewerHasStarred
+      }
+    }
+  }
+`

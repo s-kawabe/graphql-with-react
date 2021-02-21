@@ -59,7 +59,7 @@ const Home = () => {
   const [searchWord, setSearchWord] = useState('')
   const [variables, setVariables] = useState<Variables>(DEFAULT_STATE)
 
-  const qlQuery = useQuery(SEARCH_REPOSITORIES, {
+  const searchRepository = useQuery(SEARCH_REPOSITORIES, {
     variables: { query: searchWord, ...variables },
   })
 
@@ -99,9 +99,9 @@ const Home = () => {
 
   // queryが変更されたら各ステートも変更してテーブルを再レンダリングする
   useEffect(() => {
-    queryHandler(qlQuery)
+    queryHandler(searchRepository)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [qlQuery])
+  }, [searchRepository])
 
   return (
     <>
