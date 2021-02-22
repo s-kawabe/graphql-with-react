@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client'
 import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons'
 import { Alert, AlertIcon, Box, Button, Flex, Input } from '@chakra-ui/react'
 import Head from 'next/head'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { RepositoryTable } from '@/components'
 import { SEARCH_REPOSITORIES } from '@/graphql/query'
@@ -56,11 +56,12 @@ const Home = () => {
   const [title, setTitle] = useState<string>('')
   const [edges, setEdes] = useState<Edges[]>([])
   const [pageInfo, setPageInfo] = useState<PageInfo>(DEFAULT_PAGE_INFO)
-  const [searchWord, setSearchWord] = useState('')
   const [variables, setVariables] = useState<Variables>(DEFAULT_STATE)
+  const [searchWord, setSearchWord] = useState('')
+  const searchWordRef = useRef({} as HTMLInputElement)
 
   const searchRepository = useQuery(SEARCH_REPOSITORIES, {
-    variables: { query: searchWord, ...variables },
+    variables: { ...variables, query: searchWord },
   })
 
   const queryHandler = ({ loading, error, data }: any): void => {
@@ -68,15 +69,15 @@ const Home = () => {
     if (error) return setTitle(`Error!! ${error.message}`)
 
     // eslint-disable-next-line no-console
-    // console.log(data.search)
+    console.log(data)
 
     setPageInfo(data.search.pageInfo)
     setEdes(data.search.edges)
     setTitle(data.search.repositoryCount)
   }
 
-  const inputSearchWord = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchWord(e.target.value)
+  const handleClick = () => {
+    setSearchWord(searchWordRef.current.value)
   }
 
   const goPrevious = () => {
@@ -97,11 +98,10 @@ const Home = () => {
     })
   }
 
-  // queryが変更されたら各ステートも変更してテーブルを再レンダリングする
   useEffect(() => {
     queryHandler(searchRepository)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchRepository])
+  }, [searchWord, searchRepository])
 
   return (
     <>
@@ -113,12 +113,12 @@ const Home = () => {
         <Box
           bg="teal.100"
           w="100%"
-          p={4}
-          my="10"
+          p={3}
+          my="5"
           color="#606060"
           fontWeight="bold"
           textAlign="center"
-          fontSize="1.5rem"
+          fontSize="1.3rem"
           borderRadius="30px"
           boxShadow="2px 2px 5px 0px rgba(0,0,0,0.25)"
         >
@@ -129,11 +129,20 @@ const Home = () => {
           size="lg"
           mx="auto"
           w="30vw"
-          mb="10"
-          onChange={(e) => {
-            inputSearchWord(e)
-          }}
+          mb="7"
+          ref={searchWordRef}
         />
+        <Button
+          colorScheme="blue"
+          mx="auto"
+          mb="7"
+          w="30%"
+          onClick={() => {
+            handleClick()
+          }}
+        >
+          Search!
+        </Button>
         <>
           <Alert status="success" fontWeight="bold">
             <AlertIcon />
