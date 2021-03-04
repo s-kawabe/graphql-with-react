@@ -456,4 +456,17 @@ const RepositoryTable: React.FC<Props> = (props) => {
 // eslint-disable-next-line import/no-default-export
 export default RepositoryTable
 ```
+# ApolloProviderコンポーネントのclient props指定で怒られたら
+→ApolloProvider.d.tsをなおす
 
+```ts
+import React from 'react';
+import { ApolloClient } from '../../core';
+export interface ApolloProviderProps<TCache> {
+    //DefaultClient<TCache> を追加
+    client: ApolloClient<TCache> | DefaultClient<TCache>;
+    children: React.ReactNode | React.ReactNode[] | null;
+}
+export declare const ApolloProvider: React.FC<ApolloProviderProps<any>>;
+//# sourceMappingURL=ApolloProvider.d.ts.map
+```
